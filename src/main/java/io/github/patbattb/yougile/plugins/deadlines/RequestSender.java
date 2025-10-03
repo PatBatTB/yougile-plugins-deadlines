@@ -8,6 +8,7 @@ import io.github.patbattb.yougileapilib.domain.QueryParams;
 import io.github.patbattb.yougileapilib.domain.Task;
 import io.github.patbattb.yougileapilib.service.TaskService;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.conn.ConnectTimeoutException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -62,7 +63,7 @@ public class RequestSender implements AutoCloseable {
                 executorService.submit(this::waitPause);
                 return taskService.getTaskList(qParams);
             }
-        } catch (InterruptedException | ClientProtocolException e) {
+        } catch (InterruptedException | ClientProtocolException | ConnectTimeoutException e) {
             throw new PluginInterruptedException("Getting tasks was interrupted." ,e);
         } catch (URISyntaxException | IOException e) {
             throw new PluginCriticalException("Error during getting tasks", e);
@@ -76,7 +77,7 @@ public class RequestSender implements AutoCloseable {
                 executorService.submit(this::waitPause);
                 taskService.updateTask(task);
             }
-        } catch (InterruptedException | ClientProtocolException e) {
+        } catch (InterruptedException | ClientProtocolException | ConnectTimeoutException e) {
             throw new PluginInterruptedException("Getting tasks was interrupted." ,e);
         } catch (URISyntaxException | IOException e) {
             throw new PluginCriticalException("Error during getting tasks", e);
